@@ -5,21 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FitFuel AI | Intelligent Nutrition</title>
 
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-  <!-- Your CSS (ROOT level, not static/) -->
   <link rel="stylesheet" href="/style.css">
+  
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <script src="https://unpkg.com/feather-icons"></script>
 </head>
 
 <body>
 
-  <!-- Header -->
+  <canvas id="constellation-bg"></canvas>
+
   <header class="header">
     <div class="container">
       <h1 class="logo">
@@ -34,21 +33,19 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main>
     {% block content %}
     {% endblock %}
   </main>
 
-  <!-- Footer -->
   <footer class="footer">
-    <p>© 2024 FitFuel AI — Powered by Machine Learning & Nutrition Science</p>
+    <div class="footer-content">
+      <p>&copy; 2025 FitFuel AI — All Rights Reserved </p>
+      <p class="made-by">Made with <i class="fa-solid fa-heart"></i> by <strong>Vansh Malhotra</strong></p>
+    </div>
   </footer>
 
-  <!-- JS file (ROOT level, not static/) -->
   <script src="/app.js"></script>
 
 </body>
 </html>
-
-
