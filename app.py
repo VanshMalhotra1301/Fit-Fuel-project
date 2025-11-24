@@ -2,7 +2,8 @@
 from flask import Flask, render_template, request
 from utils import validate_inputs, calculate_macros, get_meal_plan, safe_load_model
 
-app = Flask(__name__)
+# IMPORTANT FIX → tell Flask your templates are in the root folder
+app = Flask(__name__, template_folder='.', static_folder='.')
 
 # Load Model (Optional)
 MODEL = safe_load_model("calorie_model.pkl")
@@ -32,12 +33,6 @@ def predict():
         bmr = 10 * weight + 6.25 * height - 5 * age - 161
 
     # Activity
-    activity_map = {
-        "sedentary": 1.2, "light": 1.375, "moderate": 1.55,
-        "active": 1.725, "very active": 1.9
-    }
-    # Match user string to map keys (approximate)
-    act_key = str(data["activity"]).lower().split()[0] # basic matching
     if "sedentary" in str(data["activity"]).lower(): act_val = 1.2
     elif "light" in str(data["activity"]).lower(): act_val = 1.375
     elif "moderate" in str(data["activity"]).lower(): act_val = 1.55
@@ -49,8 +44,10 @@ def predict():
 
     # Goal
     goal = str(data["goal"]).lower()
-    if "fat" in goal: tdee -= 300
-    elif "muscle" in goal: tdee += 300
+    if "fat" in goal:
+        tdee -= 300
+    elif "muscle" in goal:
+        tdee += 300
     
     tdee = max(1200, tdee)
 
@@ -67,17 +64,15 @@ def predict():
         except:
             prediction = None
 
-    # --- FIX IS HERE: passing plan=meal_plan ---
     return render_template(
         "result.html",
         tdee=tdee,
         calories=tdee,
         macros=macros,
-        plan=meal_plan,      # <--- CHANGED FROM meal_plan=meal_plan
+        plan=meal_plan,      # <-- Corrected variable name
         prediction=prediction,
         user_data=data
     )
 
 if __name__ == "__main__":
-
     app.run(debug=True, port=5000)
