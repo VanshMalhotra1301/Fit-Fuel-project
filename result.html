@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="result-section">
+  <div class="container">
+    <a class="back-link fade-in-up" href="/"><i class="fas fa-arrow-left"></i> New Calculation</a>
+    
+    <div class="header fade-in-up" style="margin-top: 1rem;">
+      <h2 style="font-size: 2rem;">Your Blueprint: <span style="color: var(--primary-color);">{{ user_data.goal|title }}</span></h2>
+    </div>
+
+    <div class="stats-grid fade-in-up" style="animation-delay: 0.1s;">
+      
+      <div class="glass-card stat-card">
+        <h3>Daily Target</h3>
+        <div class="big-number">{{ calories }} <span style="font-size: 1rem; color: #fff;">kcal</span></div>
+        <p style="color: var(--text-muted); margin-top: 5px;">Based on {{ user_data.activity }} lifestyle</p>
+      </div>
+
+      <div class="glass-card stat-card">
+        <h3>Macro Split</h3>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="width: 100px;">
+                <canvas id="macroChart"></canvas>
+            </div>
+            <div class="macro-list" style="text-align: right; font-size: 0.9rem;">
+                <div style="color: #c770f0;">Protein: <strong>{{ macros.protein_g }}g</strong></div>
+                <div style="color: #ff6b81;">Carbs: <strong>{{ macros.carbs_g }}g</strong></div>
+                <div style="color: #7bed9f;">Fats: <strong>{{ macros.fat_g }}g</strong></div>
+            </div>
+        </div>
+      </div>
+
+      <div class="glass-card stat-card">
+        <h3>Profile</h3>
+        <ul style="list-style: none; color: var(--text-muted);">
+            <li><i class="fas fa-user" style="width:20px; color:var(--primary-color);"></i> {{ user_data.age }} Years, {{ user_data.gender }}</li>
+            <li><i class="fas fa-ruler-vertical" style="width:20px; color:var(--primary-color);"></i> {{ user_data.height }} cm</li>
+            <li><i class="fas fa-weight" style="width:20px; color:var(--primary-color);"></i> {{ user_data.weight }} kg</li>
+            <li><i class="fas fa-carrot" style="width:20px; color:var(--primary-color);"></i> {{ user_data.diet }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 3rem; font-size: 1.5rem; border-left: 4px solid var(--primary-color); padding-left: 15px;" class="fade-in-up">Recommended Meal Plan</h3>
+    
+    <div class="meal-grid fade-in-up" style="animation-delay: 0.3s;">
+      {% for meal, items in plan.items() %}
+      <div class="glass-card meal-card">
+        <h4 style="color: var(--primary-color); margin-bottom: 1rem; text-transform: uppercase;">{{ meal }}</h4>
+        <ul class="food-list">
+          {% for it in items %}
+            <li>
+              <div class="food-name">{{ it.name }}</div>
+              <div class="food-meta">{{ it.calories }} kcal · {{ it.portion }}</div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const macroData = {
+    protein: {{ macros.protein_g }},
+    carbs: {{ macros.carbs_g }},
+    fats: {{ macros.fat_g }}
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const ctx = document.getElementById('macroChart');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Protein','Carbs','Fats'],
+          datasets: [{ 
+            data: [macroData.protein, macroData.carbs, macroData.fats], 
+            backgroundColor: ['#c770f0','#ff6b81','#7bed9f'], // Purple, Pink, Green
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: { 
+            cutout: '75%', 
+            plugins: { legend: { display: false }, tooltip: { enabled: true } } 
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

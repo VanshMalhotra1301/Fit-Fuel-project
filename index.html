@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero-grid">
+    
+    <div class="hero-left fade-in-up">
+      <h1>AI Powered <br><span>Personal Nutrition</span></h1>
+      
+      <div class="typing-text"><span id="typing-element"></span></div>
+      
+      <p class="lead">
+        Stop guessing. Enter your stats and let our machine learning model generate your perfect calorie targets, macro splits, and a realistic meal plan.
+      </p>
+      
+      <ul class="features">
+        <li><i class="fas fa-brain"></i> AI Analysis</li>
+        <li><i class="fas fa-chart-pie"></i> Smart Macros</li>
+        <li><i class="fas fa-utensils"></i> Real Food Data</li>
+      </ul>
+    </div>
+
+    <div class="glass-card fade-in-up" style="animation-delay: 0.2s;">
+      {% if errors %}
+        <div class="alert" style="background: rgba(255,0,0,0.2); border: 1px solid red; color: #ffcece; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+          <strong>Please fix:</strong>
+          <ul>{% for k,v in errors.items() %} <li>{{ k }}: {{ v }}</li> {% endfor %}</ul>
+        </div>
+      {% endif %}
+
+      <form id="fitForm" action="/predict" method="POST" autocomplete="off">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Age</label>
+            <input type="number" name="age" required placeholder="25" min="10" max="100">
+          </div>
+          <div class="input-group">
+            <label>Gender</label>
+            <select name="gender" required>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Height (cm)</label>
+            <input type="number" name="height" step="0.1" required placeholder="175">
+          </div>
+          <div class="input-group">
+            <label>Weight (kg)</label>
+            <input type="number" name="weight" step="0.1" required placeholder="70">
+          </div>
+          <div class="input-group">
+            <label>Activity</label>
+            <select name="activity">
+              <option>Sedentary</option>
+              <option>Lightly Active</option>
+              <option>Moderately Active</option>
+              <option>Very Active</option>
+              <option>Extra Active</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Goal</label>
+            <select name="goal">
+              <option>Maintenance</option>
+              <option>Fat Loss</option>
+              <option>Muscle Gain</option>
+            </select>
+          </div>
+          <div class="input-group" style="grid-column: span 2;">
+            <label>Diet Preference</label>
+            <select name="diet">
+              <option>Veg</option>
+              <option>Non-Veg</option>
+              <option>Vegan</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-bolt"></i> Generate AI Plan
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

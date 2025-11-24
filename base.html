@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FitFuel AI | Intelligent Nutrition</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <canvas id="constellation-bg"></canvas>
+
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a class="logo" href="/">FitFuel <span class="accent">AI</span></a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="https://www.linkedin.com/in/vanshmalhotra1301/" target="_blank">About Dev</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Designed & Developed by <strong>Vansh Malhotra</strong></p>
+      <div class="social-links">
+        <a href="https://www.linkedin.com/in/vanshmalhotra1301/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="mailto:vanshmalhotra4321@gmail.com"><i class="fas fa-envelope"></i></a>
+      </div>
+      <small class="copyright">© FitFuel AI · Powered by Data</small>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script>feather.replace()</script>
+</body>
+</html>
