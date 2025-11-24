@@ -5,7 +5,7 @@ from utils import validate_inputs, calculate_macros, get_meal_plan, safe_load_mo
 app = Flask(__name__)
 
 # Load Model (Optional)
-MODEL = safe_load_model("models/calorie_model.pkl")
+MODEL = safe_load_model("calorie_model.pkl")
 
 @app.route("/")
 def index():
@@ -79,4 +79,5 @@ def predict():
     )
 
 if __name__ == "__main__":
+
     app.run(debug=True, port=5000)
