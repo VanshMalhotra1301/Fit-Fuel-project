@@ -1,7 +1,0 @@
-flask
-pandas
-joblib
-python-dotenv
-scikit-learn
-datasets
-gunicorn
