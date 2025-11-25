@@ -1,16 +1,32 @@
 :root {
-  --primary-color: #c770f0;         /* The Vibe Purple */
-  --primary-glow: rgba(199, 112, 240, 0.4);
-  --secondary-color: #240046;
-  --bg-dark: #0f0f0f;
-  --glass-bg: rgba(30, 30, 30, 0.4); /* Transparent */
-  --glass-border: rgba(199, 112, 240, 0.3);
-  --text-light: #ffffff;
-  --text-muted: #d1d1d1;
-  --gradient-text: linear-gradient(45deg, #c770f0, #ffffff);
+  /* Core Colors */
+  --primary-color: #d946ef;       /* A more vibrant Magenta/Fuchsia */
+  --primary-glow: rgba(217, 70, 239, 0.5);
+  --secondary-color: #7c3aed;     /* Deep Violet */
+  --accent-cyan: #06b6d4;         /* Cyan for contrast pops */
+  
+  /* Backgrounds */
+  --bg-dark: #050505;             /* True Black */
+  --surface-dark: #121212;
+  
+  /* Glassmorphism Settings */
+  --glass-bg: rgba(20, 20, 20, 0.6);
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.01) 100%);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  
+  /* Text */
+  --text-light: #f8fafc;
+  --text-muted: #94a3b8;
+  --gradient-text: linear-gradient(to right, #d946ef, #06b6d4);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--secondary-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
 
 body {
   font-family: 'Poppins', sans-serif;
@@ -23,12 +39,38 @@ body {
   flex-direction: column;
 }
 
-/* Background Canvas */
-#constellation-bg {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
+/* --- 1. AMBIENT AURORA BACKGROUND --- 
+   Creates moving blobs of color behind everything */
+body::before, body::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(100px);
   z-index: -1;
-  background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
+  opacity: 0.4;
+  animation: orbit 20s linear infinite;
+}
+
+body::before {
+  background: var(--secondary-color);
+  top: -10%;
+  left: -10%;
+}
+
+body::after {
+  background: var(--primary-color);
+  bottom: -10%;
+  right: -10%;
+  animation-delay: -10s;
+}
+
+@keyframes orbit {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, 50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
 }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
@@ -36,128 +78,180 @@ body {
 /* Navbar */
 .navbar {
   padding: 1.5rem 0;
-  backdrop-filter: blur(10px);
-  position: sticky; top: 0; z-index: 1000;
+  /* Frosted top bar */
+  background: rgba(5, 5, 5, 0.7);
+  backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(255,255,255,0.05);
+  position: sticky; top: 0; z-index: 1000;
 }
 .nav-container { display: flex; justify-content: space-between; align-items: center; }
-.logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff; letter-spacing: 1px; }
-.logo .accent { color: var(--primary-color); text-shadow: 0 0 15px var(--primary-glow); }
-.nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-weight: 500; transition: 0.3s; }
-.nav-links a:hover { color: var(--primary-color); }
 
-/* Glassmorphism Card Utility */
+.logo { 
+  font-size: 1.8rem; font-weight: 800; text-decoration: none; color: #fff; letter-spacing: -1px; 
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .accent { 
+  color: transparent; 
+  background: var(--gradient-text); 
+  -webkit-background-clip: text; 
+  background-clip: text;
+}
+
+.nav-links a { 
+  color: var(--text-muted); text-decoration: none; margin-left: 25px; font-weight: 500; font-size: 0.95rem;
+  position: relative; transition: 0.3s;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px;
+  background: var(--primary-color); transition: 0.3s ease;
+}
+.nav-links a:hover { color: #fff; }
+.nav-links a:hover::after { width: 100%; }
+
+/* --- 2. HOLOGRAPHIC GLASS CARD --- */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  border-radius: 20px;
-  padding: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-image: var(--glass-shine); /* Adds the reflective angle */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 24px;
+  padding: 2.5rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
 }
+
+/* The Glow Border Effect on Hover */
+.glass-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  opacity: 0; transition: 0.4s;
+}
+
 .glass-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 40px rgba(199, 112, 240, 0.2);
-  border-color: var(--primary-color);
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(217, 70, 239, 0.1); /* Purple ambient glow */
+  border-color: rgba(255,255,255,0.2);
 }
+.glass-card:hover::before { opacity: 1; }
 
 /* Hero Section */
 .hero { padding: 4rem 0; min-height: 85vh; display: flex; align-items: center; }
-.hero-grid { display: grid; grid-template-columns: 1fr 450px; gap: 4rem; align-items: start; }
+.hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: center; }
 
-.hero-left h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 1rem; }
+.hero-left h1 { 
+  font-size: 4rem; line-height: 1.1; margin-bottom: 1rem; letter-spacing: -1px;
+}
 .hero-left h1 span {
+  background: var(--gradient-text); 
+  background-size: 200% auto;
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent;
+  animation: shineText 5s linear infinite;
+}
+
+@keyframes shineText {
+  to { background-position: 200% center; }
+}
+
+.typing-text { 
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem; color: var(--accent-cyan); 
+  margin-bottom: 1.5rem; display: block;
+}
+
+.lead { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2.5rem; font-weight: 300; }
+
+.features li { 
+  background: rgba(255,255,255,0.03); 
+  padding: 10px 20px; border-radius: 50px; 
+  font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.05); 
+  display: flex; align-items: center; gap: 10px; 
+  transition: 0.3s;
+}
+.features li:hover { background: rgba(255,255,255,0.08); border-color: var(--primary-color); }
+.features li i { color: var(--accent-cyan); }
+
+/* --- 3. MODERN INPUTS --- */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.input-group label { 
+  display: block; font-size: 0.8rem; color: var(--text-muted); 
+  margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+}
+
+input, select {
+  width: 100%; padding: 16px; border-radius: 12px;
+  background: rgba(0,0,0,0.4); 
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff; outline: none; transition: 0.3s;
+  font-size: 1rem;
+}
+
+input:focus, select:focus { 
+  border-color: var(--primary-color); 
+  background: rgba(0,0,0,0.6);
+  box-shadow: 0 0 0 4px rgba(217, 70, 239, 0.1); /* Soft ring */
+}
+
+/* Button - Neon Pulse */
+.btn { border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; position: relative; overflow: hidden; }
+
+.btn-primary {
+  background: var(--primary-color);
+  color: #fff; padding: 16px; width: 100%; border-radius: 12px;
+  font-weight: 700; font-size: 1rem; margin-top: 1.5rem; text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* The Shine Sweep Effect */
+.btn-primary::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: 0.5s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px var(--primary-glow);
+}
+.btn-primary:hover::after { left: 100%; }
+
+/* Stats & Results */
+.stats-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+.stat-card { text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 16px; }
+
+.big-number { 
+  font-size: 3.5rem; font-weight: 800; 
   background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.typing-text { font-size: 1.5rem; color: var(--primary-color); font-weight: 600; margin-bottom: 1.5rem; min-height: 1.6em;}
-.lead { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem; border-left: 3px solid var(--primary-color); padding-left: 1rem; }
 
-.features { list-style: none; display: flex; gap: 1rem; flex-wrap: wrap; }
-.features li { background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 50px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; }
-.features li i { color: var(--primary-color); }
-
-/* Form Styles */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-input, select {
-  width: 100%; padding: 12px; border-radius: 10px;
-  background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
-  color: #fff; outline: none; transition: 0.3s;
-}
-input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 15px var(--primary-glow); }
-
-/* Buttons */
-.btn { border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-.btn-primary {
-  background: linear-gradient(90deg, rgba(199,112,240,0.2) 0%, rgba(199,112,240,0.5) 100%);
-  border: 1px solid var(--primary-color);
-  color: #fff; padding: 14px; width: 100%; border-radius: 12px;
-  font-weight: 600; font-size: 1rem; margin-top: 1rem;
-}
-.btn-primary:hover {
-  background: var(--primary-color);
-  box-shadow: 0 0 25px var(--primary-glow);
-  transform: translateY(-2px);
-}
-
-/* Results Page */
-.result-section { padding: 3rem 0; }
-.back-link { color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 2rem; transition: 0.3s; }
-.back-link:hover { color: var(--primary-color); transform: translateX(-5px); }
-
-.stats-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
-.stat-card h3 { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
-.big-number { font-size: 3rem; font-weight: 800; color: var(--primary-color); text-shadow: 0 0 20px var(--primary-glow); }
-
+/* Meal Cards 3D */
 .meal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-.food-list li { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); }
-.food-name { font-weight: 500; color: #fff; }
-.food-meta { color: var(--primary-color); font-size: 0.85rem; }
+
+.food-list li { 
+  display: flex; justify-content: space-between; padding: 15px; 
+  background: rgba(255,255,255,0.03); margin-bottom: 10px; border-radius: 8px;
+  border-left: 3px solid transparent; transition: 0.3s;
+}
+.food-list li:hover { 
+  background: rgba(255,255,255,0.06); 
+  border-left-color: var(--accent-cyan);
+  transform: translateX(5px);
+}
 
 /* Footer */
-footer { margin-top: auto; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; background: rgba(0,0,0,0.4); }
-.social-links { margin: 1rem 0; }
-.social-links a { color: var(--text-muted); font-size: 1.5rem; margin: 0 10px; transition: 0.3s; }
-.social-links a:hover { color: var(--primary-color); transform: translateY(-3px); }
+footer { margin-top: auto; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; background: #000; }
+.social-links a:hover { color: var(--accent-cyan); transform: translateY(-3px); }
 
-/* Animation Utils */
-.fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
-@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
+/* Mobile */
 @media (max-width: 900px) {
   .hero-grid, .stats-grid, .form-grid { grid-template-columns: 1fr; }
-  .hero-left h1 { font-size: 2.5rem; }
-}
-/* Add this to your style.css */
-
-/* 1. Scroll Reveal Animation (Items slide up) */
-.hidden-content {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-    filter: blur(5px);
+  .hero-left h1 { font-size: 2.8rem; }
+  .glass-card { padding: 1.5rem; }
+  body::before, body::after { width: 300px; height: 300px; }
 }
 
-.show-content {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-}
-
-/* 2. The "Muscle Pump" Hover Effect */
-.pump-effect {
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-}
-.pump-effect:hover {
-    transform: scale(1.05) translateY(-5px); /* Grows like a pump */
-    box-shadow: 0 15px 30px rgba(199, 112, 240, 0.4); /* Glowing aura */
-}
-
-/* 3. 3D Card Tilt Container */
-.meal-card-3d {
-    perspective: 1000px;
-    transform-style: preserve-3d;
-    transition: transform 0.1s; /* Fast transition for smoothness */
-}
+/* Utility Animations */
+.fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; opacity: 0; transform: translateY(20px); }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
